@@ -6,7 +6,7 @@
     </router-link>
 
     <div class="flex-1 max-w-md mx-2 lg:mx-4">
-      <SearchBar @search="handleSearch" />
+      <SearchBar v-model="searchKeyword" @search="handleSearch" />
     </div>
 
     <div class="flex items-center gap-3">
@@ -71,6 +71,7 @@ const auth = useAuthStore()
 const { t, setLocale, locale } = useI18n()
 const showChangePwd = ref(false)
 const showResetMasterPwd = ref(false)
+const searchKeyword = ref('')
 
 const localeText = computed(() => locale() === 'zh-CN' ? '中文' : 'English')
 
