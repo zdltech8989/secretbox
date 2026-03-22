@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.pyc
+
+# Data
+data/
+*.db
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+.env.local
+
+# CLI token
+.secretbox_token
+
+# CodeBuddy
+.codebuddy/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

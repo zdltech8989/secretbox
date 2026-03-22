@@ -1,0 +1,1 @@
+console.log('SecretBox frontend JS loaded');
