@@ -50,6 +50,9 @@ COPY --from=frontend /build/dist ./static
 # 创建数据目录
 RUN mkdir -p /app/data && chown -R 1000:1000 /app/data
 
+# 声明数据卷挂载点 (用于 SQLite 数据库和上传文件)
+VOLUME ["/app/data"]
+
 # 使用非 root 用户运行
 USER 1000
 
