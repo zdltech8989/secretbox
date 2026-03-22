@@ -6,7 +6,7 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       @keyup.enter="$emit('search', modelValue)"
-      placeholder="搜索密钥名称..."
+      :placeholder="t('nav.searchPlaceholder')"
       class="w-full bg-surface-light border border-surface-lighter rounded-lg pl-10 pr-4 py-2 text-sm text-txt placeholder-txt-dim focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 transition-all"
     />
   </div>
@@ -14,6 +14,9 @@
 
 <script setup>
 import { Search } from 'lucide-vue-next'
+import { useI18n } from '../i18n'
+
+const { t } = useI18n()
 
 defineProps({ modelValue: { type: String, default: '' } })
 defineEmits(['update:modelValue', 'search'])

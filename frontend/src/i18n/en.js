@@ -1,0 +1,113 @@
+export default {
+  nav: {
+    secrets: 'Secrets',
+    categories: 'Categories',
+    importExport: 'Import/Export',
+    manage: 'Users',
+    lock: 'Lock',
+    lockVault: 'Lock Vault',
+    settings: 'Settings',
+    changePwd: 'Change Password',
+    resetMasterPwd: 'Reset Master Password',
+    logout: 'Logout',
+    logoutConfirm: 'Current user: {username}',
+    searchPlaceholder: 'Search secrets...'
+  },
+  mobile: {
+    secrets: 'Secrets',
+    categories: 'Categories',
+    importExport: 'Import/Export',
+    manage: 'Manage',
+    more: 'More'
+  },
+  dashboard: {
+    allSecrets: 'All Secrets',
+    totalRecords: 'Total {count} records',
+    noSecrets: 'No secrets yet',
+    addSecret: 'Add Secret',
+    addFirstSecret: 'Add your first secret'
+  },
+  secret: {
+    add: 'Add Secret',
+    edit: 'Edit Secret',
+    name: 'Name',
+    namePlaceholder: 'e.g. OpenAI API Key',
+    value: 'Secret Value',
+    valuePlaceholder: 'sk-xxxxxxxxxxxxxxxx',
+    category: 'Category',
+    unclassified: 'Unclassified',
+    url: 'URL',
+    urlPlaceholder: 'https://api.example.com',
+    remark: 'Remark',
+    remarkPlaceholder: 'Short label',
+    notes: 'Notes',
+    notesPlaceholder: 'Markdown supported',
+    save: 'Save',
+    saving: 'Saving...',
+    cancel: 'Cancel',
+    delete: 'Delete this secret',
+    deleteConfirm: 'Confirm delete this secret?',
+    showValue: 'View secret value',
+    copy: 'Copy',
+    copied: 'Copied',
+    copyFailed: 'Copy failed'
+  },
+  categories: {
+    title: 'Category Management',
+    add: 'Add Category',
+    name: 'Category Name',
+    namePlaceholder: 'Enter category name',
+    addBtn: 'Add',
+    cancel: 'Cancel',
+    deleteConfirm: 'Confirm delete category \"{name}\"?',
+    noCategories: 'No categories'
+  },
+  importExport: {
+    title: 'Import / Export',
+    export: 'Export Data',
+    exportCsv: 'Export CSV',
+    exportJson: 'Export JSON',
+    import: 'Import Data',
+    importHint: 'Supports Google Chrome / Microsoft Edge password export CSV files',
+    dragHint: 'Drag CSV file here',
+    clickHint: 'Or click to select file',
+    importCategory: 'Import Category',
+    startImport: 'Start Import',
+    importing: 'Importing...',
+    importSuccess: 'Successfully imported {count} secrets',
+    importFailed: 'Import failed: {error}'
+  },
+  unlock: {
+    setup: 'Setup Master Password',
+    unlock: 'Unlock Vault',
+    enterPassword: 'Enter master password',
+    passwordPlaceholder: 'Enter master password',
+    confirmPassword: 'Confirm Password',
+    unlockBtn: 'Unlock',
+    setupBtn: 'Setup',
+    wrongPassword: 'Wrong master password',
+    unlockFailed: 'Unlock failed, please retry',
+    unlockSuccess: 'Vault unlocked'
+  },
+  auth: {
+    loginTitle: 'SecretBox',
+    loginSubtitle: 'Securely store your secrets',
+    username: 'Username',
+    password: 'Password',
+    loginBtn: 'Login',
+    registerBtn: 'Register',
+    loginFailed: 'Login failed'
+  },
+  common: {
+    required: '{field} *',
+    error: 'Error',
+    success: 'Success',
+    loading: 'Loading...',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    close: 'Close'
+  }
+}

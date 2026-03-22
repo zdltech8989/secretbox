@@ -1,0 +1,113 @@
+export default {
+  nav: {
+    secrets: '密钥',
+    categories: '分类',
+    importExport: '导入导出',
+    manage: '用户管理',
+    lock: '锁定',
+    lockVault: '锁定保险箱',
+    settings: '设置',
+    changePwd: '修改登录密码',
+    resetMasterPwd: '重置主密码',
+    logout: '退出',
+    logoutConfirm: '当前用户: {username}',
+    searchPlaceholder: '搜索密钥...'
+  },
+  mobile: {
+    secrets: '密钥',
+    categories: '分类',
+    importExport: '导入导出',
+    manage: '管理',
+    more: '更多'
+  },
+  dashboard: {
+    allSecrets: '全部密钥',
+    totalRecords: '共 {count} 条记录',
+    noSecrets: '暂无密钥记录',
+    addSecret: '添加密钥',
+    addFirstSecret: '添加第一个密钥'
+  },
+  secret: {
+    add: '添加密钥',
+    edit: '编辑密钥',
+    name: '名称',
+    namePlaceholder: '如 OpenAI API Key',
+    value: '密钥值',
+    valuePlaceholder: 'sk-xxxxxxxxxxxxxxxx',
+    category: '分类',
+    unclassified: '未分类',
+    url: 'URL',
+    urlPlaceholder: 'https://api.example.com',
+    remark: '备注',
+    remarkPlaceholder: '简短标记',
+    notes: '详细说明',
+    notesPlaceholder: '支持 Markdown 格式',
+    save: '保存',
+    saving: '保存中...',
+    cancel: '取消',
+    delete: '删除此密钥',
+    deleteConfirm: '确认删除此密钥？',
+    showValue: '查看密钥值',
+    copy: '复制',
+    copied: '已复制',
+    copyFailed: '复制失败'
+  },
+  categories: {
+    title: '分类管理',
+    add: '添加分类',
+    name: '分类名称',
+    namePlaceholder: '输入分类名称',
+    addBtn: '添加',
+    cancel: '取消',
+    deleteConfirm: '确认删除分类「{name}」？',
+    noCategories: '暂无分类'
+  },
+  importExport: {
+    title: '导入 / 导出',
+    export: '导出数据',
+    exportCsv: '导出 CSV',
+    exportJson: '导出 JSON',
+    import: '导入数据',
+    importHint: '支持 Google Chrome / Microsoft Edge 密码导出的 CSV 文件',
+    dragHint: '拖拽 CSV 文件到此处',
+    clickHint: '或点击选择文件',
+    importCategory: '导入分类',
+    startImport: '开始导入',
+    importing: '导入中...',
+    importSuccess: '成功导入 {count} 条密钥',
+    importFailed: '导入失败: {error}'
+  },
+  unlock: {
+    setup: '设置主密码',
+    unlock: '解锁保险箱',
+    enterPassword: '请输入主密码',
+    passwordPlaceholder: '输入主密码',
+    confirmPassword: '确认密码',
+    unlockBtn: '解锁',
+    setupBtn: '设置',
+    wrongPassword: '主密码错误',
+    unlockFailed: '解锁失败，请重试',
+    unlockSuccess: '保险箱已解锁'
+  },
+  auth: {
+    loginTitle: 'SecretBox',
+    loginSubtitle: '安全存储您的密钥',
+    username: '用户名',
+    password: '密码',
+    loginBtn: '登录',
+    registerBtn: '注册',
+    loginFailed: '登录失败'
+  },
+  common: {
+    required: '{field} *',
+    error: '错误',
+    success: '成功',
+    loading: '加载中...',
+    cancel: '取消',
+    confirm: '确认',
+    delete: '删除',
+    edit: '编辑',
+    add: '添加',
+    close: '关闭'
+  }
+}

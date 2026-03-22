@@ -13,7 +13,7 @@
         <button
           @click="copyValue"
           class="p-1.5 rounded-lg hover:bg-primary/10 text-txt-dim hover:text-primary transition-colors"
-          title="复制密钥"
+          :title="t('secret.copy')"
         >
           <Copy v-if="!copied" class="w-4 h-4" />
           <Check v-else class="w-4 h-4 text-success" />
@@ -21,14 +21,14 @@
         <router-link
           :to="{ name: 'SecretEdit', params: { id: secret.id } }"
           class="p-1.5 rounded-lg hover:bg-primary/10 text-txt-dim hover:text-primary transition-colors"
-          title="编辑"
+          :title="t('common.edit')"
         >
           <Edit class="w-4 h-4" />
         </router-link>
         <button
           @click="$emit('delete', secret.id)"
           class="p-1.5 rounded-lg hover:bg-danger/10 text-txt-dim hover:text-danger transition-colors"
-          title="删除"
+          :title="t('common.delete')"
         >
           <Trash class="w-4 h-4" />
         </button>
@@ -54,7 +54,7 @@
 
     <div v-if="expanded && !decryptedValue && !loading && !loadError && !needUnlock" class="mt-2">
       <button @click="loadValue" class="text-xs text-primary hover:text-primary-dark transition-colors">
-        点击查看密钥值
+        {{ t('secret.showValue') }}
       </button>
     </div>
     <div v-if="expanded && loadError" class="mt-2 text-xs text-danger">
@@ -67,13 +67,13 @@
           class="flex-1 bg-surface border border-surface-lighter rounded-lg px-3 py-1.5 text-xs text-txt focus:outline-none focus:border-primary" />
         <button @click="doInlineUnlock" :disabled="unlocking"
           class="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs hover:bg-primary/20 transition-colors disabled:opacity-50">
-          {{ unlocking ? '解锁中...' : '解锁' }}
+          {{ unlocking ? t('common.loading') + '...' : t('unlock.unlockBtn') }}
         </button>
-        <button @click="needUnlock = false" class="text-xs text-txt-dim hover:text-txt">取消</button>
+        <button @click="needUnlock = false" class="text-xs text-txt-dim hover:text-txt">{{ t('common.cancel') }}</button>
       </div>
       <p v-if="unlockError" class="mt-1 text-xs text-danger">{{ unlockError }}</p>
     </div>
-    <div v-if="loading" class="mt-2 text-xs text-txt-dim animate-pulse">解密中...</div>
+    <div v-if="loading" class="mt-2 text-xs text-txt-dim animate-pulse">{{ t('common.loading') }}...</div>
 
     <div class="mt-2 text-xs text-txt-dim">
       {{ formatDate(secret.updated_at || secret.created_at) }}
@@ -86,6 +86,7 @@ import { ref } from 'vue'
 import { Copy, Check, Edit, Trash, Eye, EyeOff, Globe } from 'lucide-vue-next'
 import { useSecretsStore } from '../stores/secrets'
 import { useAuthStore } from '../stores/auth'
+import { useI18n } from '../i18n'
 
 const props = defineProps({
   secret: { type: Object, required: true },
@@ -95,6 +96,7 @@ defineEmits(['delete'])
 
 const store = useSecretsStore()
 const auth = useAuthStore()
+const { t, locale } = useI18n()
 const expanded = ref(false)
 const decryptedValue = ref('')
 const showValue = ref(false)
@@ -115,7 +117,7 @@ async function loadValue() {
     decryptedValue.value = data.value
     if (data.notes) props.secret.notes = data.notes
   } catch (e) {
-    const detail = e.response?.data?.detail || '获取密钥值失败'
+    const detail = e.response?.data?.detail || t('common.error')
     if (detail.toLowerCase().includes('unlock') || detail.toLowerCase().includes('encrypt') || detail.includes('解锁')) {
       needUnlock.value = true
     } else {
@@ -135,7 +137,7 @@ async function doInlineUnlock() {
     needUnlock.value = false
     await loadValue()
   } catch (e) {
-    unlockError.value = e.response?.data?.detail || '解锁失败'
+    unlockError.value = e.response?.data?.detail || t('unlock.unlockFailed')
   } finally {
     unlocking.value = false
   }
@@ -158,6 +160,12 @@ async function copyValue() {
 function formatDate(dateStr) {
   if (!dateStr) return ''
   const d = new Date(dateStr)
-  return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  const lang = locale()
+  return d.toLocaleDateString(lang === 'zh-CN' ? 'zh-CN' : 'en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 </script>

@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import select, func
+from sqlalchemy import select, func, or_
 from app.models import Secret, MasterKey
 from app.crypto import encrypt, decrypt, derive_key
 from app.database import AsyncSessionLocal
@@ -85,10 +85,18 @@ class SecretService:
             if category_id:
                 q = q.where(Secret.category_id == category_id)
             if keyword:
-                q = q.where(Secret.name.ilike(f'%{keyword}%'))
+                # 多字段搜索：name, url, remark
+                search_condition = or_(
+                    Secret.name.ilike(f'%{keyword}%'),
+                    Secret.url.ilike(f'%{keyword}%'),
+                    Secret.remark.ilike(f'%{keyword}%')
+                )
+                q = q.where(search_condition)
             q = q.order_by(Secret.updated_at.desc())
+            print(f"[DEBUG] category_id={category_id}, keyword={keyword}")
             result = await session.execute(q)
             secrets = result.scalars().all()
+            print(f"[DEBUG] Found {len(secrets)} secrets")
             return [
                 {
                     'id': s.id,
@@ -141,4 +149,5 @@ class SecretService:
             return True
 
     async def search(self, keyword: str) -> list[dict]:
+        """搜索包含关键词的密钥记录（在 name、url、remark 字段中搜索）"""
         return await self.list_all(keyword=keyword)

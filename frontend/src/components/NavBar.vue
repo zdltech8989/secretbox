@@ -10,38 +10,44 @@
     </div>
 
     <div class="flex items-center gap-3">
+      <!-- 语言切换 -->
+      <button @click="toggleLanguage" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-primary transition-colors text-sm" title="切换语言">
+        <Languages class="w-4 h-4" />
+        <span>{{ localeText }}</span>
+      </button>
+      
       <router-link v-if="auth.isAdmin" to="/admin" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-primary transition-colors text-sm">
         <Users class="w-4 h-4" />
-        <span>用户管理</span>
+        <span>{{ t('nav.manage') }}</span>
       </router-link>
       <router-link to="/import-export" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-primary transition-colors text-sm">
         <Download class="w-4 h-4" />
-        <span>导入导出</span>
+        <span>{{ t('nav.importExport') }}</span>
       </router-link>
       <router-link to="/categories" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-primary transition-colors text-sm">
         <Folder class="w-4 h-4" />
-        <span>分类</span>
+        <span>{{ t('nav.categories') }}</span>
       </router-link>
       <!-- 锁定保险箱 -->
       <button v-if="auth.vaultUnlocked" @click="auth.lockVault()"
         class="hidden md:flex items-center gap-1 text-txt-muted hover:text-amber-400 transition-colors text-sm"
-        title="锁定保险箱">
+        :title="t('nav.lockVault')">
         <Lock class="w-4 h-4" />
-        <span>锁定</span>
+        <span>{{ t('nav.lock') }}</span>
       </button>
       <button @click="showChangePwd = true" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-primary transition-colors text-sm"
-        title="修改登录密码">
+        :title="t('nav.changePwd')">
         <Settings class="w-4 h-4" />
       </button>
       <button v-if="auth.vaultUnlocked" @click="showResetMasterPwd = true" class="hidden md:flex items-center gap-1 text-txt-muted hover:text-amber-400 transition-colors text-sm"
-        title="重置主密码">
+        :title="t('nav.resetMasterPwd')">
         <KeyRound class="w-4 h-4" />
       </button>
       <!-- 退出登录 -->
       <button @click="handleLogout" class="hidden md:flex items-center gap-1 text-txt-dim hover:text-danger transition-colors text-sm"
-        :title="`当前用户: ${auth.currentUser?.username || ''}`">
+        :title="t('nav.logoutConfirm', { username: auth.currentUser?.username || '' })">
         <LogOut class="w-4 h-4" />
-        <span>退出</span>
+        <span>{{ t('nav.logout') }}</span>
       </button>
     </div>
 
@@ -51,18 +57,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { Shield, Download, Folder, Settings, Users, LogOut, Lock, KeyRound } from 'lucide-vue-next'
+import { Shield, Download, Folder, Settings, Users, LogOut, Lock, KeyRound, Languages } from 'lucide-vue-next'
 import SearchBar from '../components/SearchBar.vue'
 import ChangePasswordModal from '../components/ChangePasswordModal.vue'
 import ResetMasterPasswordModal from '../components/ResetMasterPasswordModal.vue'
 import { useAuthStore } from '../stores/auth'
+import { useI18n } from '../i18n'
 
 const router = useRouter()
 const auth = useAuthStore()
+const { t, setLocale, locale } = useI18n()
 const showChangePwd = ref(false)
 const showResetMasterPwd = ref(false)
+
+const localeText = computed(() => locale() === 'zh-CN' ? '中文' : 'English')
+
+function toggleLanguage() {
+  setLocale(locale() === 'zh-CN' ? 'en' : 'zh-CN')
+}
 
 function handleSearch(keyword) {
   router.push({ name: 'Dashboard', query: { q: keyword } })
