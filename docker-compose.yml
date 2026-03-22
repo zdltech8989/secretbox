@@ -1,26 +1,120 @@
 version: '3.8'
+
 services:
+  # ============ SecretBox 应用服务 ============
   secretbox:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: secretbox
     restart: unless-stopped
     ports:
-      - '9000:9000'
+      - "${APP_PORT:-9000}:9000"
+    env_file:
+      - .env
     environment:
+      - DB_TYPE=${DB_TYPE:-sqlite}
+      - MYSQL_HOST=${MYSQL_HOST:-mysql}
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_USER=${MYSQL_USER:-secretbox}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-secretbox}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-secretbox}
+      - SQLITE_PATH=${SQLITE_PATH:-./data/secretbox.db}
+      - DATA_DIR=${DATA_DIR:-./data}
       - MASTER_PASSWORD=${MASTER_PASSWORD:-changeme}
       - JWT_SECRET=${JWT_SECRET:-secretbox-jwt-secret-change-me}
-      - DATABASE_URL=sqlite+aiosqlite:///./data/secretbox.db
-      - DATA_DIR=./data
+      - KDF_ITERATIONS=${KDF_ITERATIONS:-100000}
     volumes:
-      - ./data:/app/data
+      # 数据目录挂载 (SQLite 数据库 + 上传文件)
+      - ${DATA_DIR:-./data}:/app/data
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - secretbox-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
+  # ============ MySQL 数据库服务 (可选) ============
+  mysql:
+    image: mysql:8.0
+    container_name: secretbox-mysql
+    restart: unless-stopped
+    ports:
+      - "${MYSQL_EXTERNAL_PORT:-3306}:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root_secretbox}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-secretbox}
+      - MYSQL_USER=${MYSQL_USER:-secretbox}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-secretbox}
+    volumes:
+      # MySQL 数据目录挂载
+      - ${MYSQL_DATA_DIR:-./mysql_data}:/var/lib/mysql
+      # 初始化脚本 (可选)
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - secretbox-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root_secretbox}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    profiles:
+      - mysql  # 使用 docker compose --profile mysql 启动
+
+  # ============ Nginx 反向代理 (可选) ============
   nginx:
     image: nginx:alpine
     container_name: secretbox-nginx
     restart: unless-stopped
     ports:
-      - '80:80'
+      - "${NGINX_PORT:-80}:80"
+      - "${NGINX_SSL_PORT:-443}:443"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      # SSL 证书挂载 (可选)
+      # - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - secretbox
+    networks:
+      - secretbox-network
+    profiles:
+      - nginx
+
+networks:
+  secretbox-network:
+    driver: bridge
+
+# ============ 卷挂载说明 ============
+# DATA_DIR: 应用数据目录 (SQLite 数据库、上传文件等)
+#   - 默认: ./data
+#   - 挂载: ./data:/app/data
+#
+# MYSQL_DATA_DIR: MySQL 数据目录
+#   - 默认: ./mysql_data
+#   - 挂载: ./mysql_data:/var/lib/mysql
+#
+# ============ 使用示例 ============
+#
+# 1. 使用 SQLite (默认):
+#    cp .env.example .env
+#    docker compose up -d
+#
+# 2. 使用 MySQL:
+#    cp .env.example .env
+#    编辑 .env 设置 DB_TYPE=mysql
+#    docker compose --profile mysql up -d
+#
+# 3. 使用 MySQL + Nginx:
+#    docker compose --profile mysql --profile nginx up -d
+#
+# 4. 查看日志:
+#    docker compose logs -f secretbox
+#
+# 5. 停止服务:
+#    docker compose down
